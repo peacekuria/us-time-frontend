@@ -5,7 +5,7 @@ import TabNavigation from './components/TabNavigation';
 import Assessment from './components/Assessment';
 import DisorderSearch from './components/DisorderSearch';
 import LoadingSpinner from './components/LoadingSpinner';
-import './styles/App.css';
+import './App.css';
 
 function App() {
   const [activeTab, setActiveTab] = useState('assessment');

@@ -1,273 +1,367 @@
-// src/components/DisorderSearch.js
-import React, { useState, useEffect } from 'react';
-import LoadingSpinner from './LoadingSpinner';
-import { disorderAPI } from '../services/api';
-import '../styles/DisorderSearch.css';
+/* DisorderSearch Component Styles */
 
-const DisorderSearch = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [disorders, setDisorders] = useState([]);
-  const [filteredDisorders, setFilteredDisorders] = useState([]);
-  const [selectedDisorder, setSelectedDisorder] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [loadingDisorders, setLoadingDisorders] = useState(true);
-  const [error, setError] = useState('');
+.disorder-search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  // Fetch all disorders on component mount
-  useEffect(() => {
-    const fetchDisorders = async () => {
-      try {
-        setLoadingDisorders(true);
-        const data = await disorderAPI.getAllDisorders();
-        setDisorders(data);
-        setFilteredDisorders(data);
-      } catch (error) {
-        console.error('Error fetching disorders:', error);
-        setError('Failed to load disorders. Please try again later.');
-        
-        // Fallback data
-        const fallbackData = [
-          {
-            id: 1,
-            name: 'Depression',
-            description: 'A mental health disorder characterized by persistent sadness and loss of interest in activities.',
-            symptoms: 'Persistent sadness, loss of interest, sleep changes, appetite changes, fatigue',
-            remedies: ['Therapy', 'Medication', 'Exercise', 'Sleep routine', 'Social support']
-          },
-          {
-            id: 2,
-            name: 'Anxiety Disorder',
-            description: 'Excessive worry and fear that interferes with daily activities.',
-            symptoms: 'Excessive worry, restlessness, fatigue, difficulty concentrating, irritability',
-            remedies: ['CBT', 'Medication', 'Relaxation techniques', 'Exercise', 'Sleep hygiene']
-          }
-        ];
-        setDisorders(fallbackData);
-        setFilteredDisorders(fallbackData);
-      } finally {
-        setLoadingDisorders(false);
-      }
-    };
+.search-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
 
-    fetchDisorders();
-  }, []);
+.search-title {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 300;
+}
 
-  // Handle search input
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
+.search-description {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
 
-    if (value.trim() === '') {
-      setFilteredDisorders(disorders);
-      setSelectedDisorder(null);
-      return;
-    }
+.error-message {
+  background-color: #fee;
+  color: #c0392b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #e74c3c;
+}
 
-    const filtered = disorders.filter(disorder =>
-      disorder.name.toLowerCase().includes(value.toLowerCase()) ||
-      disorder.description.toLowerCase().includes(value.toLowerCase()) ||
-      (disorder.symptoms && disorder.symptoms.toLowerCase().includes(value.toLowerCase()))
-    );
+.search-bar-container {
+  margin-bottom: 2rem;
+}
 
-    setFilteredDisorders(filtered);
-    
-    // Auto-select first result if only one
-    if (filtered.length === 1) {
-      setSelectedDisorder(filtered[0]);
-    } else {
-      setSelectedDisorder(null);
-    }
-  };
+.search-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  // Select a disorder
-  const handleSelectDisorder = (disorder) => {
-    setSelectedDisorder(disorder);
-    // Scroll to disorder details
-    setTimeout(() => {
-      const detailsElement = document.getElementById('disorder-details');
-      if (detailsElement) {
-        detailsElement.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 25px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
 
-  // Quick search suggestions
-  const quickSearchTerms = ['Depression', 'Anxiety', 'Bipolar', 'Stress', 'Sleep'];
+.search-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
 
-  // Clear search
-  const handleClearSearch = () => {
-    setSearchTerm('');
-    setFilteredDisorders(disorders);
-    setSelectedDisorder(null);
-  };
+.search-button, .clear-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
 
-  if (loadingDisorders) {
-    return <LoadingSpinner message="Loading disorders database..." />;
+.search-button {
+  background-color: #3498db;
+  color: white;
+}
+
+.search-button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.search-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.clear-button {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.clear-button:hover {
+  background-color: #7f8c8d;
+}
+
+.button-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.quick-search {
+  text-align: center;
+}
+
+.quick-search-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.quick-search-tags {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.quick-search-tag {
+  padding: 0.5rem 1rem;
+  background-color: #ecf0f1;
+  color: #34495e;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.quick-search-tag:hover {
+  background-color: #3498db;
+  color: white;
+}
+
+.results-count {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.disorders-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.disorder-card {
+  background: white;
+  border: 2px solid #e1e8ed;
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.disorder-card:hover {
+  border-color: #3498db;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.disorder-card.selected {
+  border-color: #27ae60;
+  background-color: #f8fff9;
+}
+
+.disorder-name {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.disorder-description {
+  color: #34495e;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.disorder-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.disorder-remedies-count {
+  background-color: #ecf0f1;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+.disorder-select {
+  color: #3498db;
+  font-weight: 500;
+}
+
+.disorder-details {
+  background: white;
+  border: 2px solid #27ae60;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.disorder-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.disorder-details-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.close-details-button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #7f8c8d;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-details-button:hover {
+  background-color: #ecf0f1;
+  color: #34495e;
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section-title {
+  font-size: 1.2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.detail-section-content {
+  color: #34495e;
+  line-height: 1.6;
+}
+
+.remedies-list {
+  list-style: none;
+  padding: 0;
+}
+
+.remedy-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.remedy-item:last-child {
+  border-bottom: none;
+}
+
+.remedy-icon {
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.disclaimer-note {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  border-left: 4px solid #ffc107;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.empty-state-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-description {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.empty-state-button {
+  padding: 0.75rem 2rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.empty-state-button:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .disorder-search-container {
+    padding: 1rem;
   }
 
-  return (
-    <div className="disorder-search-container">
-      <div className="search-header">
-        <h2 className="search-title">Find Mental Health Information</h2>
-        <p className="search-description">
-          Search for mental health conditions to learn about symptoms, treatments, and resources.
-        </p>
-      </div>
+  .search-title {
+    font-size: 2rem;
+  }
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+  .disorders-list {
+    grid-template-columns: 1fr;
+  }
 
-      {/* Search Bar */}
-      <div className="search-bar-container">
-        <div className="search-bar">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search disorders (e.g., depression, anxiety)..."
-            value={searchTerm}
-            onChange={handleSearch}
-            disabled={loading}
-          />
-          <button 
-            className="search-button"
-            onClick={() => searchTerm && handleSearch({ target: { value: searchTerm } })}
-            disabled={loading || !searchTerm.trim()}
-          >
-            {loading ? (
-              <span className="button-spinner"></span>
-            ) : '🔍'}
-          </button>
-          {searchTerm && (
-            <button 
-              className="clear-button"
-              onClick={handleClearSearch}
-            >
-              Clear
-            </button>
-          )}
-        </div>
-        
-        {/* Quick Search Suggestions */}
-        <div className="quick-search">
-          <span className="quick-search-label">Quick search:</span>
-          <div className="quick-search-tags">
-            {quickSearchTerms.map(term => (
-              <button
-                key={term}
-                className="quick-search-tag"
-                onClick={() => {
-                  setSearchTerm(term);
-                  handleSearch({ target: { value: term } });
-                }}
-              >
-                {term}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+  .search-bar {
+    flex-direction: column;
+  }
 
-      {/* Search Results Count */}
-      <div className="results-count">
-        Found {filteredDisorders.length} disorder{filteredDisorders.length !== 1 ? 's' : ''}
-        {searchTerm && ` for "${searchTerm}"`}
-      </div>
-
-      {/* Disorders List */}
-      <div className="disorders-list">
-        {filteredDisorders.map(disorder => (
-          <div 
-            key={disorder.id}
-            className={`disorder-card ${selectedDisorder?.id === disorder.id ? 'selected' : ''}`}
-            onClick={() => handleSelectDisorder(disorder)}
-          >
-            <h3 className="disorder-name">{disorder.name}</h3>
-            <p className="disorder-description">
-              {disorder.description.length > 150 
-                ? `${disorder.description.substring(0, 150)}...` 
-                : disorder.description}
-            </p>
-            <div className="disorder-meta">
-              <span className="disorder-remedies-count">
-                {Array.isArray(disorder.remedies) ? disorder.remedies.length : 0} treatment options
-              </span>
-              <span className="disorder-select">Click for details →</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Selected Disorder Details */}
-      {selectedDisorder && (
-        <div id="disorder-details" className="disorder-details">
-          <div className="disorder-details-header">
-            <h3 className="disorder-details-title">{selectedDisorder.name}</h3>
-            <button 
-              className="close-details-button"
-              onClick={() => setSelectedDisorder(null)}
-            >
-              ×
-            </button>
-          </div>
-          
-          <div className="disorder-details-content">
-            <div className="detail-section">
-              <h4 className="detail-section-title">Description</h4>
-              <p className="detail-section-content">{selectedDisorder.description}</p>
-            </div>
-            
-            {selectedDisorder.symptoms && (
-              <div className="detail-section">
-                <h4 className="detail-section-title">Common Symptoms</h4>
-                <p className="detail-section-content">{selectedDisorder.symptoms}</p>
-              </div>
-            )}
-            
-            <div className="detail-section">
-              <h4 className="detail-section-title">Treatment Options</h4>
-              <ul className="remedies-list">
-                {Array.isArray(selectedDisorder.remedies) ? (
-                  selectedDisorder.remedies.map((remedy, index) => (
-                    <li key={index} className="remedy-item">
-                      <span className="remedy-icon">💊</span>
-                      {remedy}
-                    </li>
-                  ))
-                ) : (
-                  <li className="remedy-item">No treatment information available</li>
-                )}
-              </ul>
-            </div>
-            
-            <div className="disclaimer-note">
-              <strong>Note:</strong> This information is for educational purposes only. 
-              Always consult with a qualified healthcare professional for diagnosis and treatment.
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Empty State */}
-      {filteredDisorders.length === 0 && (
-        <div className="empty-state">
-          <div className="empty-state-icon">🔍</div>
-          <h3 className="empty-state-title">No disorders found</h3>
-          <p className="empty-state-description">
-            Try searching for different terms or browse the complete list.
-          </p>
-          <button 
-            className="empty-state-button"
-            onClick={handleClearSearch}
-          >
-            View All Disorders
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default DisorderSearch;
+  .quick-search-tags {
+    justify-content: center;
+  }
+}

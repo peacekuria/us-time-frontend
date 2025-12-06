@@ -1,8 +1,8 @@
 // src/components/DisorderSearch.js
 import React, { useState, useEffect } from 'react';
 import LoadingSpinner from './LoadingSpinner';
-import { disorderAPI } from '../services/api';
-import '../styles/DisorderSearch.css';
+import { disorderService } from '../services/api';
+import './DisorderSearch.css';
 
 const DisorderSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,13 +18,13 @@ const DisorderSearch = () => {
     const fetchDisorders = async () => {
       try {
         setLoadingDisorders(true);
-        const data = await disorderAPI.getAllDisorders();
+        const data = await disorderService.getAllDisorders();
         setDisorders(data);
         setFilteredDisorders(data);
       } catch (error) {
         console.error('Error fetching disorders:', error);
         setError('Failed to load disorders. Please try again later.');
-        
+
         // Fallback data
         const fallbackData = [
           {
@@ -70,7 +70,7 @@ const DisorderSearch = () => {
     );
 
     setFilteredDisorders(filtered);
-    
+
     // Auto-select first result if only one
     if (filtered.length === 1) {
       setSelectedDisorder(filtered[0]);
@@ -131,7 +131,7 @@ const DisorderSearch = () => {
             onChange={handleSearch}
             disabled={loading}
           />
-          <button 
+          <button
             className="search-button"
             onClick={() => searchTerm && handleSearch({ target: { value: searchTerm } })}
             disabled={loading || !searchTerm.trim()}
@@ -141,7 +141,7 @@ const DisorderSearch = () => {
             ) : '🔍'}
           </button>
           {searchTerm && (
-            <button 
+            <button
               className="clear-button"
               onClick={handleClearSearch}
             >
@@ -149,7 +149,7 @@ const DisorderSearch = () => {
             </button>
           )}
         </div>
-        
+
         {/* Quick Search Suggestions */}
         <div className="quick-search">
           <span className="quick-search-label">Quick search:</span>
@@ -179,15 +179,15 @@ const DisorderSearch = () => {
       {/* Disorders List */}
       <div className="disorders-list">
         {filteredDisorders.map(disorder => (
-          <div 
+          <div
             key={disorder.id}
             className={`disorder-card ${selectedDisorder?.id === disorder.id ? 'selected' : ''}`}
             onClick={() => handleSelectDisorder(disorder)}
           >
             <h3 className="disorder-name">{disorder.name}</h3>
             <p className="disorder-description">
-              {disorder.description.length > 150 
-                ? `${disorder.description.substring(0, 150)}...` 
+              {disorder.description.length > 150
+                ? `${disorder.description.substring(0, 150)}...`
                 : disorder.description}
             </p>
             <div className="disorder-meta">
@@ -205,27 +205,27 @@ const DisorderSearch = () => {
         <div id="disorder-details" className="disorder-details">
           <div className="disorder-details-header">
             <h3 className="disorder-details-title">{selectedDisorder.name}</h3>
-            <button 
+            <button
               className="close-details-button"
               onClick={() => setSelectedDisorder(null)}
             >
               ×
             </button>
           </div>
-          
+
           <div className="disorder-details-content">
             <div className="detail-section">
               <h4 className="detail-section-title">Description</h4>
               <p className="detail-section-content">{selectedDisorder.description}</p>
             </div>
-            
+
             {selectedDisorder.symptoms && (
               <div className="detail-section">
                 <h4 className="detail-section-title">Common Symptoms</h4>
                 <p className="detail-section-content">{selectedDisorder.symptoms}</p>
               </div>
             )}
-            
+
             <div className="detail-section">
               <h4 className="detail-section-title">Treatment Options</h4>
               <ul className="remedies-list">
@@ -241,9 +241,9 @@ const DisorderSearch = () => {
                 )}
               </ul>
             </div>
-            
+
             <div className="disclaimer-note">
-              <strong>Note:</strong> This information is for educational purposes only. 
+              <strong>Note:</strong> This information is for educational purposes only.
               Always consult with a qualified healthcare professional for diagnosis and treatment.
             </div>
           </div>
@@ -258,7 +258,7 @@ const DisorderSearch = () => {
           <p className="empty-state-description">
             Try searching for different terms or browse the complete list.
           </p>
-          <button 
+          <button
             className="empty-state-button"
             onClick={handleClearSearch}
           >
