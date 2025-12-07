@@ -145,10 +145,7 @@ body {
   margin: 0 auto;
 }
 
-/* Animations */
-.fade-in {
-  animation: fadeIn 0.3s ease;
-}
+
 
 @keyframes fadeIn {
   from {

@@ -3,9 +3,9 @@ import './TabNavigation.css';
 
 const TabNavigation = ({ activeTab, onTabChange }) => {
   const tabs = [
-    { id: 'assessment', label: 'Self Assessment', icon: '📝' },
-    { id: 'disorders', label: 'Browse Disorders', icon: '🔍' },
-    { id: 'about', label: 'About', icon: 'ℹ️' },
+    { id: 'assessment', label: 'Self Assessment', icon: '' },
+    { id: 'disorders', label: 'Browse Disorders', icon: '' },
+    { id: 'about', label: 'About', icon: '' },
   ];
 
   return (
