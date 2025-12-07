@@ -5,7 +5,7 @@ const TabNavigation = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'assessment', label: 'Self Assessment', icon: '📝' },
     { id: 'disorders', label: 'Browse Disorders', icon: '🔍' },
-    { id: 'results', label: 'My Results', icon: '📊' },
+    { id: 'about', label: 'About', icon: 'ℹ️' },
   ];
 
   return (
