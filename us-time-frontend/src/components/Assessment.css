@@ -79,13 +79,16 @@
 .question-number {
   background: #2196f3;
   color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
   font-weight: 600;
+  white-space: nowrap;
   flex-shrink: 0;
 }
 

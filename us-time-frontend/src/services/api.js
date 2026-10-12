@@ -46,10 +46,12 @@ export const disorderService = {
     }
   },
 
-  // Search disorders by name
+  // Search disorders by name, description or symptoms
   searchDisorders: async (name) => {
     try {
-      const response = await api.get(`/api/disorders/search/${name}`);
+      const response = await api.get(
+        `/api/disorders/search/${encodeURIComponent(name)}`
+      );
       return response.data;
     } catch (error) {
       console.error('Search disorders error:', error);
