@@ -401,3 +401,174 @@
     font-size: 0.95rem;
   }
 }
+/* ------------------------------------------------------------------
+   Layout used by the current markup.
+
+   The rules above were written for an earlier revision of the
+   component, so several classes referenced by Assessment.jsx have no
+   styling at all and fall back to browser defaults.
+   ------------------------------------------------------------------ */
+
+.assessment {
+  padding: 2rem;
+}
+
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.question-category {
+  align-self: center;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.question-status {
+  margin-top: 1rem;
+}
+
+.answered-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.answered-status.answered {
+  color: #2e7d32;
+}
+
+.answered-status.pending {
+  color: #999;
+}
+
+.progress-section {
+  margin-bottom: 2rem;
+}
+
+/* Assessment results */
+
+.results-section {
+  margin-top: 2rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+.results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.results-header h3 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+}
+
+.results-header .severity-badge {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.result-card {
+  background: #f8fdff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.result-summary {
+  margin-bottom: 1.5rem;
+}
+
+.result-text {
+  font-size: 1.05rem;
+  color: #34495e;
+  margin-bottom: 1rem;
+}
+
+.recommendations h4 {
+  color: #2c3e50;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.result-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.disclaimer-note {
+  background: #fff8e1;
+  border-left: 4px solid #ff9800;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  color: #7a4f01;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  flex: 1 1 320px;
+}
+
+.share-button {
+  flex: 0 0 auto;
+  padding: 0.75rem 1.5rem;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.share-button:hover {
+  background: #1976d2;
+  transform: translateY(-1px);
+}
+
+/* Loading state */
+
+.assessment-loading {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #666;
+}
+
+.assessment-loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 1rem;
+  border: 4px solid #e0e0e0;
+  border-top-color: #2196f3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .assessment {
+    padding: 1rem;
+  }
+
+  .results-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
